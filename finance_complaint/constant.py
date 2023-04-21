@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
+import os
 
-TIMESTAMP= datetime().now().strftime("%Y%m%d_%H%M%S")
+TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 @dataclass
 class EnvironmentVariables:
@@ -17,7 +18,13 @@ DATA_INGESTION_FILE_NAME = "finance_complaint"
 DATA_INGESTION_FEATURE_STORE_DIR = "feature_store"
 DATA_INGESTION_FAILED_DIR = "failed_downloaded_files"
 DATA_INGESTION_METADATA_FILE_NAME = "meta_info.yaml"
-DATA_INGESTION_MIN_START_DATE ='2019-01-01'
+DATA_INGESTION_MIN_START_DATE ='2022-07-01'
 DATA_INGESTION_DATA_SOURCE_URL = f"https://www.consumerfinance.gov/data-research/consumer-complaints/search/api/v1/" \
                       f"?date_received_max=<todate>&date_received_min=<fromdate>" \
                       f"&field=all&format=json"
+
+#Data Validation related variables
+DATA_VALIDATION_DIR = "data_validation"
+DATA_VALIDATION_FILE_NAME = 'finance_complaint'
+DATA_VALIDATION_ACCEPTED_DATA_DIR = "accepted_data"
+DATA_VALIDATION_REJECTED_DATA_DIR = "rejected_data"

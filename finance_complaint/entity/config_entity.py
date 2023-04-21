@@ -25,7 +25,7 @@ class DataIngestionConfig:
                 self.from_date = DATA_INGESTION_MIN_START_DATE
 
             if to_date is None:
-                self.to_date = datatime.now().strftime("%Y-%m-%d")
+                self.to_date = datetime.now().strftime("%Y-%m-%d")
 
             data_ingestion_master_dir = os.path.join(os.path.dirname(training_pipeline_config.artifact_dir), DATA_INGESTION_DIR)
 
@@ -45,5 +45,15 @@ class DataIngestionConfig:
             self.feature_store_dir = os.path.join(data_ingestion_master_dir, DATA_INGESTION_FEATURE_STORE_DIR)
             self.datasource_url = DATA_INGESTION_DATA_SOURCE_URL
         
+        except Exception as e:
+            raise FinanceException(e, sys)
+
+class DataValidationConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig)-> None:
+        try:
+            data_validation_dir = os.path.join(training_pipeline_config.artifact_dir, DATA_VALIDATION_DIR)
+            self.accepted_data_dir = os.path.join(data_validation_dir, DATA_VALIDATION_ACCEPTED_DATA_DIR)
+            self.rejected_data_dir = os.path.join(data_validation_dir, DATA_VALIDATION_REJECTED_DATA_DIR)
+            self.file_name = DATA_VALIDATION_FILE_NAME
         except Exception as e:
             raise FinanceException(e, sys)
