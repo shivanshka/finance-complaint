@@ -1,7 +1,7 @@
 from collections import namedtuple
-from finance_complaint.artifact_entity import DataIngestionArtifact
-from finance_complaint.config_entity import DataIngestionConfig
-from finance_complaint.metadata_entity import DataIngestionMetadata
+from finance_complaint.entity import DataIngestionArtifact
+from finance_complaint.entity import DataIngestionConfig
+from finance_complaint.entity import DataIngestionMetadata
 from finance_complaint.exception import FinanceException
 from finance_complaint.logger import logging
 import os, sys
@@ -13,6 +13,7 @@ import uuid
 import json
 import re
 import time
+from typing import List
 
 DownloadUrl = namedtuple("DownloadUrl", ["url","file_path", "n_retry"])
 
@@ -50,7 +51,7 @@ class DataIngestion:
         else:
             intervals = pd.date_range(start=self.data_ingestion_config.from_date,
                                       end=self.data_ingestion_config.to_date,
-                                      periods=freq).astype('str').tolist()
+                                      freq=freq).astype('str').tolist()
 
         logging.debug(f"Prepared Interval: {intervals}")
 
@@ -82,7 +83,7 @@ class DataIngestion:
     def download_data(self, download_url: DownloadUrl):
         try:
             logging.info(f"Starting download operation: {download_url}")
-            download_dir = os.path.join(download_url.file_path)
+            download_dir = os.path.dirname(download_url.file_path)
 
             # creating download directory
             os.makedirs(download_dir, exist_ok=True)
@@ -91,21 +92,20 @@ class DataIngestion:
             data = requests.get(download_url.url, params={'User-agent':f'your bot {uuid.uuid4()}'})
 
             try:
-                logging.info(f"Started writing downloaded data into json files: {download_url.file_path}")
-                
-                #saving downloaded data into hard disk
-                with open(download_url.file_path,"w") as file_obj:
+                logging.info(f"Started writing downloaded data into json file: {download_url.file_path}")
+                # saving downloaded data into hard disk
+                with open(download_url.file_path, "w") as file_obj:
                     finance_complaint_data = list(map(lambda x: x["_source"],
-                                                        filter(lambda x: "_source" in x.keys(), 
-                                                            json.loads(data.content))))
-                    json.dump(finance_complaint_data, file_obj)
-                logging.info(f"Downloaded data has been written into files: {download_url.file_path}")
-            
-            except Exception as e:
-                logging.info("Failed to download hence retry again")
+                                                      filter(lambda x: "_source" in x.keys(),
+                                                             json.loads(data.content)))
+                                                  )
 
-                #removing file failed 
-                if os.path.join(download_url.file_path):
+                    json.dump(finance_complaint_data, file_obj)
+                logging.info(f"Downloaded data has been written into file: {download_url.file_path}")
+            except Exception as e:
+                logging.info("Failed to download hence retry again.")
+                # removing file failed file exist
+                if os.path.exists(download_url.file_path):
                     os.remove(download_url.file_path)
                 self.retry_download_data(data, download_url=download_url)
 
@@ -196,6 +196,7 @@ class DataIngestion:
                                     feature_store_file_path=feature_store_file_path,
                                     download_dir = self.data_ingestion_config.download_dir,
                                     metadata_file_path = self.data_ingestion_config.metadata_file_path)
+            
             logging.info(f"Data Ingestion Artifact: {artifact}")
             return artifact
         except Exception as e:

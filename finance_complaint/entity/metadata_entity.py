@@ -3,7 +3,7 @@ from collections import namedtuple
 from finance_complaint.exception import FinanceException
 from finance_complaint.utils import read_yaml_file, write_yaml_file
 from finance_complaint.logger import logging
-import os
+import os, sys
 
 DataIngestionMetadataInfo = namedtuple("DataIngestionMetadataInfo", ["from_date", "to_date","data_file_path"])
 

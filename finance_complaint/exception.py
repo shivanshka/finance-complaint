@@ -14,7 +14,7 @@ class FinanceException(Exception):
         try_block_line_number = exec_tb.tb_lineno
         file_name = exec_tb.tb_frame.f_code.co_filename
         error_message = f"Error occured in script: [ {file_name} ] at line number: [{try_block_line_number}]"\
-                        f"message: [{error_message}]"
+                        f" message: [{error_message}]"
         return error_message
 
      def __str__(self):

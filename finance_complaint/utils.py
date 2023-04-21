@@ -1,6 +1,6 @@
 import yaml
 from finance_complaint.exception import FinanceException
-import os
+import os, sys
 
 
 def read_yaml_file(file_path: str) -> dict:
