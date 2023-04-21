@@ -49,7 +49,7 @@ class DataValidation:
                 missing_report[column] = MissingReport(total_row = number_of_row,
                                                         missing_row=missing_row,
                                                         missing_percentage=missing_percentage)
-            logging,info(f"Missing report prepared: {missing_report}")  
+            logging.info(f"Missing report prepared: {missing_report}")  
             return missing_report
         except Exception as e:
             raise FinanceException(e, sys) 
@@ -58,7 +58,7 @@ class DataValidation:
         try:
             missing_report: Dict[str, MissingReport] = self.get_missing_report(dataframe=dataframe)
 
-            umwanted_column: List[str] = self.schema.umwanted_columns
+            unwanted_column: List[str] = self.schema.unwanted_columns
             for column in missing_report:
                 if missing_report[column].missing_percentage > (threshold * 100):
                     unwanted_column.append(column)
@@ -118,7 +118,7 @@ class DataValidation:
 
             data_validation_artifact = DataValidationArtifact(accepted_file_path=accepted_file_path,
                                                               rejected_dir=self.data_validation_config.rejected_data_dir)
-            logging.info(f"Data Validation artifact: [{artifact}]")
+            logging.info(f"Data Validation artifact: [{data_validation_artifact}]")
             return data_validation_artifact
         except Exception as e:
             raise FinanceException(e, sys)
