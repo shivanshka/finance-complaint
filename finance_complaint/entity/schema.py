@@ -68,3 +68,7 @@ class FinanceDataSchema:
                     [self.col_date_sent_to_company, self.col_date_received]
         return features    
         
+    @property
+    def unwanted_columns(self)-> List[str]:
+        features = [self.col_complaint_id, self.col_sub_product, self.col_complaint_what_happened]
+        return features   
