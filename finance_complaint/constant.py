@@ -28,3 +28,11 @@ DATA_VALIDATION_DIR = "data_validation"
 DATA_VALIDATION_FILE_NAME = 'finance_complaint'
 DATA_VALIDATION_ACCEPTED_DATA_DIR = "accepted_data"
 DATA_VALIDATION_REJECTED_DATA_DIR = "rejected_data"
+
+#Data Transformation related variables
+DATA_TRANSFORMATION_DIR = "data_transformation"
+DATA_TRANSFORMATION_PIPELINE_DIR = "transformed_pipeline"
+DATA_TRANSFORMATION_TRAIN_DIR = 'train'
+DATA_TRANSFORMATION_TEST_DIR = 'test'
+DATA_TRANSFORMATION_FILE_NAME ="finance_complaint"
+DATA_TRANSFORMATION_TEST_SIZE = 0.3
