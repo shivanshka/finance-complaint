@@ -70,3 +70,16 @@ class DataTransformationConfig:
         except Exception as e:
             raise FinanceException(e, sys)
 
+class ModelTrainerConfig:
+     def __init__(self, training_pipeline_config: TrainingPipelineConfig)-> None:
+        try:
+            model_trainer_dir = os.path.join(training_pipeline_config.artifact_dir, MODEL_TRAINER_DIR)
+            self.trained_model_file_path = os.path.join(model_trainer_dir, 
+                                                        MODEL_TRAINER_TRAINED_MODEL_DIR,
+                                                        MODEL_TRAINER_MODEL_NAME)
+            self.label_indexer_model_dir = os.path.join(model_trainer_dir, MODEL_TRAINER_LABEL_INDEXER_DIR)
+            self.base_accuracy = MODEL_TRAINER_BASE_ACCURACY
+            self.metric_list = MODEL_TRAINER_MODEL_METRIC_NAMES
+        except Exception as e:
+            raise FinanceException(e, sys)
+

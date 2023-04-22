@@ -1,9 +1,10 @@
-from finance_complaint.components import DataIngestion, DataValidation, DataTransformation
+from finance_complaint.components import DataIngestion, DataValidation, DataTransformation, ModelTrainer
 from finance_complaint.exception import FinanceException
 from finance_complaint.logger import logging
 from finance_complaint.entity import (DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig, 
-                                            DataTransformationConfig)
-from finance_complaint.entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact
+                                            DataTransformationConfig, ModelTrainerConfig)
+from finance_complaint.entity import (DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact, 
+                                        ModelTrainerArtifact)
 import os, sys
 
 
@@ -40,11 +41,22 @@ class TrainingPipeline:
         except Exception as e:
             raise FinanceException(e, sys)
 
+    def start_model_training(self, data_transformation_artifact: DataTransformationArtifact)-> ModelTrainerArtifact:
+        try:
+            model_trainer_config = ModelTrainerConfig(training_pipeline_config=self.training_pipeline_config)
+            model_trainer = ModelTrainer(data_transformation_artifact = data_transformation_artifact, 
+                                         model_trainer_config = model_trainer_config)
+            model_trainer_artifact = model_trainer.initiate_model_training()
+            return model_trainer_artifact
+        except Exception as e:
+            raise FinanceException(e, sys)
+
 
     def start(self):
         try:
             data_ingestion_artifact = self.start_data_ingestion()
             data_validation_artifact = self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
             data_transformation_artifact = self.start_data_transformation(data_validation_artifact=data_validation_artifact)
+            model_trainer_artifact = self.start_model_training(data_transformation_artifact=data_transformation_artifact)
         except Exception as e:
             raise FinanceException(e, sys)
