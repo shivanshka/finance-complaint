@@ -1,10 +1,11 @@
-from finance_complaint.components import DataIngestion, DataValidation, DataTransformation, ModelTrainer, ModelEvaluation
+from finance_complaint.components import (DataIngestion, DataValidation, DataTransformation, 
+                                                    ModelTrainer, ModelEvaluation, ModelPusher)
 from finance_complaint.exception import FinanceException
 from finance_complaint.logger import logging
 from finance_complaint.entity import (DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig, 
-                                            DataTransformationConfig, ModelTrainerConfig, ModelEvaluationConfig)
+                            DataTransformationConfig, ModelTrainerConfig, ModelEvaluationConfig, ModelPusherConfig)
 from finance_complaint.entity import (DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact, 
-                                        ModelTrainerArtifact, ModelEvaluationArtifact)
+                            ModelTrainerArtifact, ModelEvaluationArtifact, ModelPusherArtifact)
 import os, sys
 
 
@@ -62,7 +63,16 @@ class TrainingPipeline:
             return model_evaluation_artifact
         except Exception as e:
             raise FinanceException(e, sys)
-
+    
+    def start_model_pusher(self, model_trainer_artifact: ModelTrainerArtifact)-> ModelPusherArtifact:
+        try:
+            model_pusher_config = ModelPusherConfig(training_pipeline_config=self.training_pipeline_config)
+            model_pusher = ModelPusher(model_trainer_artifact = model_trainer_artifact, 
+                                         model_pusher_config = model_pusher_config)
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+            return model_pusher_artifact
+        except Exception as e:
+            raise FinanceException(e, sys)
 
     def start(self):
         try:
@@ -78,6 +88,6 @@ class TrainingPipeline:
                                                                     model_trainer_artifact=model_trainer_artifact)
             
             if model_evaluation_artifact.model_accepted:
-                pass
+                self.start_model_pusher(model_trainer_artifact=model_trainer_artifact)
         except Exception as e:
             raise FinanceException(e, sys)

@@ -93,3 +93,11 @@ class ModelEvaluationConfig:
         except Exception as e:
             raise FinanceException(e, sys)
 
+class ModelPusherConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig)-> None:
+        try:
+            self.pusher_model_dir = os.path.join(training_pipeline_config.artifact_dir,
+                                                    MODEL_PUSHER_DIR, "model", MODEL_PUSHER_MODEL_NAME)
+            self.saved_model_dir = MODEL_PUSHER_SAVED_MODEL_DIRS
+        except Exception as e:
+            raise FinanceException(e, sys)
