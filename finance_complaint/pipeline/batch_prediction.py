@@ -3,7 +3,7 @@ from finance_complaint.logger import logging
 from finance_complaint.entity import BatchPredictionConfig
 from finance_complaint.ml.estimator import FinanceComplaintEstimator
 from finance_complaint.config.spark_manager import spark_session
-import os, sys
+import os, sys, shutil
 from pyspark.sql import DataFrame
 from finance_complaint.constant import TIMESTAMP
 
@@ -26,7 +26,7 @@ class BatchPrediction:
 
             for file_name in input_files:
                 data_file_path = os.path.join(self.batch_config.inbox_dir, file_name)   
-                df: DataFrame = spark_session.read.parquet(data_file_path)
+                df: DataFrame = spark_session.read.parquet(data_file_path).limit(1000)
 
                 prediction_df = finance_estimator.transform(dataframe=df)
                 prediction_file_path = os.path.join(self.batch_config.outbox_dir,f"{file_name}_{TIMESTAMP}")
@@ -35,6 +35,7 @@ class BatchPrediction:
                 archive_file_path = os.path.join(self.batch_config.archive_dir,f"{file_name}_{TIMESTAMP}")
                 df.write.parquet(archive_file_path)
 
-
+                shutil.rmtree(self.batch_config.inbox_dir)
+                os.makedirs(self.batch_config.inbox_dir)
         except Exception as e:
             raise FinanceException(e, sys)
