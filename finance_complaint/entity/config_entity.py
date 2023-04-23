@@ -83,3 +83,13 @@ class ModelTrainerConfig:
         except Exception as e:
             raise FinanceException(e, sys)
 
+class ModelEvaluationConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig)-> None:
+        try:
+            self.model_evaluation_dir = os.path.join(training_pipeline_config.artifact_dir,
+                                                        MODEL_EVALUATION_DIR)
+            self.threshold=MODEL_EVALUATION_THRESHOLD_VALUE
+            self.metric_list = MODEL_EVALUATION_METRIC_NAMES
+        except Exception as e:
+            raise FinanceException(e, sys)
+

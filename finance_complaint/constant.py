@@ -54,3 +54,16 @@ MODEL_TRAINER_MODEL_METRIC_NAMES = ['f1',
                                     'precisionByLabel',
                                     'recallByLabel',
                                     'fMeasureByLabel']
+
+# Model Evaluation related variables
+MODEL_SAVED_DIR = "saved_models"
+MODEL_NAME = "finance_estimator"
+MODEL_EVALUATION_DIR = "model_evaluation"
+MODEL_EVALUATION_REPORT_DIR = "report"
+MODEL_EVALUATION_REPORT_FILE_NAME=" evaluation_report"
+MODEL_EVALUATION_THRESHOLD_VALUE=0.002
+MODEL_EVALUATION_METRIC_NAMES = ['f1']
+
+# Model Pusher related varaibles
+MODEL_PUSHER_SAVED_MODEL_DIRS = 'saved_models'
+MO
