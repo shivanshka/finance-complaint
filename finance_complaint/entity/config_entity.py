@@ -101,3 +101,14 @@ class ModelPusherConfig:
             self.saved_model_dir = MODEL_PUSHER_SAVED_MODEL_DIRS
         except Exception as e:
             raise FinanceException(e, sys)
+
+class BatchPredictionConfig:
+    def __init__(self):
+        try:
+            self.inbox_dir = os.path.join("data","inbox")
+            self.outbox_dir = os.path.join("data","outbox")
+            self.archive_dir = os.path.join("data","archive")
+            os.makedirs(self.outbox_dir, exist_ok=True)
+            os.makedirs(self.archive_dir, exist_ok=True)
+        except Exception as e:
+            raise FinanceException(e, sys)
