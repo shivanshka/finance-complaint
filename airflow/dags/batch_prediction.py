@@ -25,7 +25,7 @@ with DAG(
         os.system(f"aws s3 sync s3://{bucket_name}/inbox {config.inbox_dir}")
 
     def batch_prediction(**kwargs):
-        from finance_complaint.pipeline.batch_prediction import BatchPredictionConfig,BatchPrediction
+        from finance_complaint.pipeline.batch_prediction import BatchPrediction
         config = BatchPredictionConfig()
         batch_prediction = BatchPrediction(batch_config=config)
         batch_prediction.start_prediction()
